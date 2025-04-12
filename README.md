@@ -21,6 +21,8 @@ Works for DSM 7.1.1 probably also DSM 6.x. Does not work for DSM 5.x
 
 Requires that you have setup and connected to the VPN before you use the script for the first time.
 
+To avoid all traffic going the VPN, the script also creates a static route for the VPN, leaving other traffic alone. Adjust `VPN_GATEWAY` and `VPN_SUBNET` according to the settings in your VPN.
+
 ### `vpn_connect_dsm52.sh`
 
 Works for DSM 5.2
@@ -34,3 +36,7 @@ Instructions
 * Copy the needed file `cp /tmp/vpnc_current /usr/local/vpn/vpninfo`
 * Add `vpn_connect_dsm52.sh` to the same folder `/usr/local/vpn/`
 * Schedule `/usr/local/vpn/vpn_connect_dsm52.sh start` and `/usr/local/vpn/vpn_connect_dsm52.sh stop` as needed in your task planner.
+
+## Notes on VPN and DSM 5.2
+
+My old DSM 5.2 is the target of my backups. It does not support many different VPN types, so you may have to try some different ones, before you find one you can use.
