@@ -9,11 +9,13 @@ If you can establish such a VPN and have the opportunity to let your synology NA
 
 Since Hyper Backup tasks can be scheduled, it would be nice to schedule the NASes' joining and leaving the VPN too, but this capability is not built-in to the task scheduler or the network settings.
 
+I'm sharing the scripts here, because the information about how to connect to VPN via scripts on synology is sparse and this worked for me.
+
 ## Scripts
 
-The scripts in this repository allow you to have your NAS join and leave the VPN via a script, which you can then schedule in the task scheduler. Use the scripts at your own risk. I take no responsibility for damage or misconfiguration directly or indirectly caused by the use of these scripts.
+The scripts in this repository allow you to have your NAS join and leave the VPN via a script, which you can then schedule in the task scheduler. Both scripts are only tested in a scenario with a single vpn configuration.
 
-Both scripts are only tested in a scenario with a single vpn configuration.
+*Use the scripts at your own risk. I take no responsibility for damage or misconfiguration directly or indirectly caused by the use of these scripts.*
 
 ### `vpn_connect.sh`
 
