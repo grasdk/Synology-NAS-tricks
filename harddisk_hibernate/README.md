@@ -1,5 +1,10 @@
-# Problem: Harddisk(s) never spin down for hibernation
-If your Synology runs a lot of services, it's probably not gonna be easy to make the disks hibernate. Many servies are constantly doing something or other with the disks.
+# Problem: Harddisk(s) never spin down
+
+While hibernation of harddisks are said to be a bad strategy and cause more wear and tear than leaving them idle, constantly accessing them might also be a bad idea.
+
+Here is a bit about investigating what is using your disks, so you might limit this, whether you want to enable hibernation or not.
+
+If your Synology runs a lot of services, it's probably not gonna be easy to make the disks idle/hibernate. Many servies are constantly doing something or other with the disks.
 
 If you still want to give it a go, read on to find typical culprits that keeps the disks spinning. And find out further down, how you might discover what else keeps your disks spinning.
 
@@ -13,9 +18,10 @@ If you still want to give it a go, read on to find typical culprits that keeps t
   * Uninstall Surveillance Station if you don't use it. I didn't so didn't try other solutions
 * Download Station's emule client updates its statistics file: @appconf/DownloadStation/amule/statistics.dat
   * Disable Emule capability, when you don't need it.
-* Download Station's torrent client opens some library files at least once every hour.
-  * Remove stale downloads
-  * Remove uploads
+* Download Station's torrent client opens some library (`.so`) files at least once every hour.
+  * Did not find a remedy to eliminate this. Tried
+     * Disable automatic loading of .torrent and .nzb files from a folder
+     * Emptying download and share list
 * Active Insight keeps other files busy. Learned about it [on reddit](https://www.reddit.com/r/synology/comments/1i89w76/why_is_my_synology_nas_frequently_spinning_up/)
   * Remove Active Insight 
 * Some SMBXFERDB file is constantly being modified
