@@ -1,0 +1,79 @@
+#Install exiftool 
+# ansible-playbook -i hosts.yml -l <host or group> install_exiftool.yml -u <admin user> --ask-pass -b --ask-become-pass
+
+---
+- name: Install exiftool
+  vars:
+    exiftool_source: "https://exiftool.org/Image-ExifTool-13.21.tar.gz"
+    exiftool_target: "/usr/share/applications/ExifTool"
+  hosts: exifhosts
+  tasks:
+  - name: Create download directory if it doesn't exist
+    file:
+      path: "{{ exiftool_dldir }}"
+      state: directory
+      mode: 0755
+
+  - name: Check if download directory is empty
+    command: ls -A "{{ exiftool_dldir }}"
+    register: dir_contents
+    ignore_errors: yes
+
+  - name: Remove directory contents if not empty
+    file:
+      path: "{{ exiftool_dldir }}/{{ item }}"
+      state: absent
+    with_items: "{{ dir_contents.stdout_lines }}"
+    when: dir_contents.stdout_lines | length > 0
+  
+  - name: Download and unpack exiftool
+    unarchive:
+      src: "{{ exiftool_source }}"
+      dest: "{{ exiftool_dldir }}"
+      remote_src: yes
+      mode: '755'
+
+  - name: Create target directory if it doesn't exist
+    file:
+      path: "{{ exiftool_target }}"
+      state: directory
+      owner: "{{exif_user}}"
+      group: "{{exif_group}}"
+      mode: 0755
+      
+  - name: Check if target directory is empty
+    command: ls -A "{{ exiftool_target }}"
+    register: dir_contents
+    ignore_errors: yes
+
+  - name: Remove directory contents of target dir if not empty
+    file:
+      path: "{{ exiftool_target }}/{{ item }}"
+      state: absent
+    with_items: "{{ dir_contents.stdout_lines }}"
+    when: dir_contents.stdout_lines | length > 0
+    
+  - name: Move exiftool to target dir
+    shell: |
+      mv $(find {{exiftool_dldir}} -mindepth 1 -maxdepth 1 -type d -iname \*exiftool-\*)/* {{exiftool_target}} -f
+    become: yes
+
+  - name: Check if exiftool_target is already in $PATH
+    shell: grep -qxF "export PATH=\"\$PATH:{{ exiftool_target }}\"" /etc/profile
+    register: grep_result
+    ignore_errors: true
+
+  - name: Append exiftool_target to $PATH in /etc/profile if it isn't already there
+    lineinfile:
+      path: /etc/profile
+      line: 'export PATH="$PATH:{{ exiftool_target }}"'
+      create: yes
+    when: grep_result.rc != 0
+
+  - name: Create a symbolic link in /bin
+    file:
+      src: "{{exiftool_target}}/exiftool"
+      dest: /bin/exiftool
+      owner: "{{exif_user}}"
+      group: "{{exif_group}}"
+      state: link
